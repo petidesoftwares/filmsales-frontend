@@ -2,15 +2,15 @@
 <head>
     <link rel="stylesheet" href="../stylecheets/filmsalessheet.css">
     <script type="text/javascript" src="../jscripts/jquery.js"></script>
-    <script type="text/javascript" src="../jscripts/controller.js"></script>
+    <script type="text/javascript" src="../jscripts/admin-controller.js"></script>
 </head>
 <body>
 <div>
     <div id="page-title">
         <h1>Film Sales Services</h1>
         <div id="navlink">
-            <li class="active" id="create" onclick="showCreateForm()">Create</li>
-            <li id="edit" onclick="showEditForm()">Edit</li>
+            <li id="create" onclick="showCreateForm(this)">Create</li>
+            <li id="edit" onclick="showEditForm(this)">Edit</li>
             <li onclick="toggleDropdown()" class="dp-view">View</li>
             <div id="dropdown-menu" class="dp-content">
                 <span onclick="getFilmView()">Film</span>
@@ -18,11 +18,12 @@
                 <span onclick="getFindCustomerView()">Custmer</span>
                 <span onclick="getReportView()">Report</span>
             </div>
-            <li>Delete</li>
+            <li id="delete-film" onclick="showDeleteForm(this)">Delete</li>
         </div>
     </div>
     <div class="page-body">
         <div class="admin-form-pane" id="create-film-form">
+            <h1 id="admin-w-logo">SYSTEM ADMIN</h1>
 
         </div>
 <!--        <div class="editorPane admin-form-pane" id="edit-film-form">editor</div>-->

@@ -33,8 +33,8 @@ const createForm = '<form name="film-form" id="film-form" enctype="multipart/for
 const filmViewForm = `<div class="search-pane" id="view-film-pane"><input type="text"  name="search-genre" id="search-genre" placeholder="Search film by genre"/><button class="search-btn" onclick="searchByGenre()">Search</button></div>`;
 const searchProductForm = `<div class="search-pane" id="view-product-pane"><input type="text" name="search-product" id="search-product" placeholder="Enter phrase or character from product to search"/><button class="search-btn" onclick="searchFilmByProductChar()">Search</button></div>`;
 const findCustomer = `<div class="search-pane" id="view-customer-pane"><input type="number" name="search-customer" id="search-customer" placeholder="Enter age range to search for"/><button class="search-btn" onclick="searchCustomerByAge()">Search</button></div>`;
-const reportPane = `<div id="view-report-pane"><input type="radio" name="report" value="monthly" onclick="getMonthInputField()"/>Monthly Sales<input type="radio" name="report" value="customer-purchase"/>Films Purchased By A Customer <div class="month-pane"><input type="number" name="month" id="month-field" placeholder="Enter month as digits"/><button class="search-btn" onclick="monthlySales()">Search</button></div></div>`;
-var oldGenre ="";
+const reportPane = `<div id="view-report-pane"><input type="radio" name="report" value="monthly" onclick="getMonthInputField()"/>Monthly Sales<input type="radio" name="report" value="customer-purchase" onclick="customerPurchase()"/>Films Purchased By A Customer <div class="month-pane"><input type="number" name="month" id="month-field" placeholder="Enter month as digits"/><button class="search-btn" onclick="monthlySales()">Search</button></div></div>`;
+// var oldGenre ="";
 
 const months = {
     "01":"January",
@@ -50,11 +50,15 @@ const months = {
     "11":"November",
     "12":"December"
 }
-
+$(document).ready(function (){
+    // showCreateForm();
+})
 
 /*****************Admin Activities***********************/
 
-function showCreateForm(){
+function showCreateForm(e){
+    document.getElementById(e.id).setAttribute('class','active');
+    $("#admin-w-logo").remove();
     var content = $(".admin-form-pane").html();
     if(content !== ""){
         $("#film-form").remove();
@@ -63,7 +67,7 @@ function showCreateForm(){
     $(".admin-form-pane").append(createForm);
 
 }
-function showEditForm(){
+function showEditForm(e){
     const editForm = '<div name="film-form" id="edit-form" class="form">\n' +
         '                <div class="form-title"><h3>Edit Film</h3></div>\n' +
         '                <div class="form-component">\n' +
@@ -93,6 +97,8 @@ function showEditForm(){
         '                <input type="button" id="save-film-btn" onclick="submitEditedFilms()" value="Upload"/>\n' +
         '            </div>';
 
+    $("#admin-w-logo").remove();
+    document.getElementById(e.id).setAttribute('class','active');
     var content = $(".admin-form-pane").html();
     if(content !== ""){
         $(".admin-form-pane").html("");
@@ -110,6 +116,30 @@ function showEditForm(){
     });
     $(".admin-form-pane").append(editForm);
 }
+
+function showDeleteForm(e){
+    $("#admin-w-logo").remove();
+    document.getElementById(e.id).setAttribute('class','active');
+
+    $.get(appUrl+'/admin/films',function (data){
+        console.log(data);
+        var filmList ='<select id="film-to-delete">'
+        for (let i=0; i<data.length;i++){
+            filmList +='<option name="film_'+data[i].id+'" value="'+data[i].id+'">'+data[i].title+'</option>';
+        }
+        filmList +='</select><br><button id="delete-btn" onclick="deleteFilm()">Delete</button>';
+        $(".admin-form-pane").append(filmList);
+    });
+}
+
+function deleteFilm(){
+    const film_id = $("#film-to-delete").val();
+    $.get(appUrl+'/admin/delete/film/'+film_id, function (data){
+        alert(data.message);
+        window.location.href = 'admin.php';
+    })
+}
+
 function editFilm($id){
     $.get(appUrl+'/admin/film/edit/'+$id, function (data){
         $("#price").val(data.data[0].price);
@@ -145,7 +175,9 @@ function submitEditedFilms(){
     })
 }
 
-function getFilmView(){
+function getFilmView(e){
+    document.getElementById(e.id).setAttribute('class','active');
+    $("#admin-w-logo").remove();
     var content = $(".admin-form-pane").html();
     if(content !== ""){
         $(".admin-form-pane").html("");
@@ -154,6 +186,7 @@ function getFilmView(){
 }
 
 function getProductView(){
+    $("#admin-w-logo").remove();
     var content = $(".admin-form-pane").html();
     if(content !== ""){
         $(".admin-form-pane").html("");
@@ -162,6 +195,7 @@ function getProductView(){
 }
 
 function getFindCustomerView(){
+    $("#admin-w-logo").remove();
     var content = $(".admin-form-pane").html();
     if(content !== ""){
         $(".admin-form-pane").html("");
@@ -170,6 +204,7 @@ function getFindCustomerView(){
 }
 
 function getReportView(){
+    $("#admin-w-logo").remove();
     var content = $(".admin-form-pane").html();
     if(content !== ""){
         $(".admin-form-pane").html("");
@@ -180,6 +215,22 @@ function getReportView(){
 
 function getMonthInputField(){
     $(".month-pane").show();
+}
+
+function customerPurchase(){
+    $.get(appUrl+'/admin/customers', function (data){
+        $(".output").html("")
+        for(let i=0; i<data.length;i++){
+            $(".output").append('<input type="hidden" id="id_'+data[i].id+'" value="'+data[i].id+'"/><span onclick="getCustomerID('+data[i].id+')">'+data[i].firstname+' '+data[i].surname+'</span><br>');
+        }
+    });
+}
+
+function getCustomerID(id){
+    const userid = $("#id_"+id).val();
+    $.get(appUrl+'/admin/purchase/'+userid, function (data){
+        $(".output").append('<span>Total: '+data.films+'</span>');
+    });
 }
 
 function searchByGenre() {
@@ -231,13 +282,16 @@ function searchCustomerByAge(){
                 if(data.customer.length == 0){
                     $(".output").html('Customer with age above '+age+' not found');
                 }else{
-                    var customer ='<div>';
+                    var customers ='<div>';
                     var sn=0;
                     for (let i=0; data.customer.length;i++){
-                        customer += '<span>'+sn+' '+data.customer[i].firstname+' '+data.customer[i].middle_name+' '+data.customer[i].surname+'</span>';
+                        // $(".output").append(data.customer[i]['firstname']);
+                        // console.log(data.customer[i]['firstname']);
+                        sn++;
+                        customers +='<span>'+sn+' '+data.customer[i]['firstname']+' '+data.customer[i].middle_name+' '+data.customer[i].surname+'</span>';
                     }
-                    customer += '</div>';
-                    $(".output").html(customer);
+                    customers += '</div>';
+                    $(".output").html(customers);
                 }
 
             }

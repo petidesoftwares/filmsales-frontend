@@ -7,18 +7,25 @@
     <body>
         <div id="user-page-title">
             <h1>Film Sales Services</h1>
-            <div id="profile-photo" onclick="toggleDropdown()" class="dp-view"></div>
-            <div id="dropdown-menu" class="dp-content profile-dropdown">
-                <span>View Profile</span>
-                <span>Add Credit Card</span>
-                <span>Edit Profile</span>
-                <span>Edit Credit Card</span>
-            </div>
-            <button type="button" class="access-control-btn" id="singnin-btn" onclick="directToSignUp()">SingnUp</button>
-            <button type="button" class="access-control-btn" id="logout-btn" onclick="logOut()">Logout</button>
+<!--            <div id="profile-photo" onclick="toggleDropdown()" class="dp-view"></div>-->
+<!--            <div id="dropdown-menu" class="dp-content profile-dropdown">-->
+<!--                <span>View Profile</span>-->
+<!--                <span>Add Credit Card</span>-->
+<!--                <span>Edit Profile</span>-->
+<!--                <span>Edit Credit Card</span>-->
+<!--            </div>-->
+            <div class="loggedin-nav"><button type="button" class="access-control-btn" id="signup-btn" onclick="directToSignUp()">SingnUp</button>
+            <button type="button" class="access-control-btn" id="signin-btn" onclick="directToSignIn()">SignIn</button></div>
         </div>
         <div class="main-display-page">
 
         </div>
     </body>
 </html>
+
+
+
+
+
+
+

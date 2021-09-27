@@ -8,11 +8,11 @@
 <div id="user-page-title">
     <h1>Film Sales Services</h1>
     <div class="loggedin-nav">
+        <span class="access-control-btn">Home</span>
         <div id="shopping-cart" onclick="showModal()">Cart:<span id="cart-sum"></span></div>
-        <div id="profile-photo" onclick="toggleDropdown()" class="dp-view"></div>
+        <div id="profile-photo" onclick="toggleDropdown()" class="dp-view">User</div>
         <div id="dropdown-menu" class="dp-content profile-dropdown">
             <span onclick="directToProfile()">View Profile</span>
-            <span onclick="directToViewCredit()">View Credit Card</span>
             <span onclick="directToViewCredit()">View Credit Card</span>
             <span onclick="directToAddCreditCard()">Add Credit Card</span>
             <span onclick="directToEditProfile()">Edit Profile</span>

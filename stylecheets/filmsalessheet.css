@@ -33,6 +33,14 @@ body{
     margin-top:3%;
 
 }
+
+#admin-w-logo{
+    text-align: center;
+    font-size: 56px;
+    font-weight: bold;
+    color: dimgrey;
+}
+
 .form, .payment-form{
     border: solid 1px darkslategray;
 }
@@ -40,6 +48,18 @@ body{
 #signup-note{
     margin-left: 40%;
     margin-top: 1%;
+}
+
+#film-to-delete{
+    width: 60%;
+    font-size: large;
+    margin: 2%;
+    border: solid 1px darkslategray;
+}
+#delete-btn{
+    font-size: large;
+    margin: 2%;
+    width: 25%;
 }
 
 .output-pane{
@@ -75,6 +95,9 @@ body{
     font-size: large;
     text-align: left;
     overflow: auto;
+}
+.output span{
+    cursor: pointer;
 }
 
 .form-title{
@@ -147,6 +170,7 @@ body{
     padding-left: 20px;
     padding-right: 20px;
     font-weight: bold;
+    cursor: pointer;
 
 }
 #navlink li:hover, li:focus{
@@ -155,6 +179,7 @@ body{
 
     -webkit-border-top-left-radius: 5px;
     -webkit-border-top-right-radius: 5px;
+    cursor: pointer;
 }
 .active{
     font-size: medium;
@@ -283,11 +308,12 @@ body{
     font-size: xx-large;
     font-weight: bold;
     border: solid 0px forestgreen;
-    margin-left: 3%;
-    /*margin-top: -2%;*/
-    /*float: right;*/
     cursor: pointer;
     font-size: medium;
+}
+
+#login-btn{
+    margin-left: 80%;
 }
 
 

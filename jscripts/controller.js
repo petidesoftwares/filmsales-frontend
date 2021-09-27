@@ -88,9 +88,16 @@ function showCart(){
         data: {},
 
         success: function (response){
-            $("#cart-sum").append(response.cartSum);
-            localStorage.setItem('number_items',response.cartSum);
-            localStorage.setItem('shoppingID',response.shoppingID[0].shopping_id);
+            $("#cart-sum").append(response.cartSum[0].total);
+            if(response.cartSum[0].total == 0){
+                if (localStorage.getItem('number_items') != null){
+                    localStorage.removeItem('number_items');
+                    localStorage.removeItem('shoppingID');
+                }
+            }else{
+                localStorage.setItem('number_items',response.cartSum[0].total);
+                localStorage.setItem('shoppingID',response.shoppingID[0].shopping_id);
+            }
         },
         error:function (error){
             console.log(error);
@@ -135,6 +142,8 @@ function addToCart(id){
 }
 
 function userCart(){
+    $("#cart-modal").html("");
+    $("#cart-modal").append('<div class="cart-section"><h4>Your Cart</h4></div>');
     $.ajax({
         type: 'get',
         url: appUrl + '/user/show/cart/'+localStorage.getItem('user_id'),
@@ -151,7 +160,7 @@ function userCart(){
             var totalAmount = 0;
             for (let i=0;i<data.cart.length; i++){
                 sn++;
-                const cartSection = '<div class="cart-section"><h4>Your Cart</h4><span>'+sn+'.</span><br><span>'+data.cart[i].film.title+'</span><br><span>'+data.cart[i].film.price+'</span></div>';
+                const cartSection = '<div class="cart-section"><span>'+sn+'.</span><br><span>'+data.cart[i].film.title+'</span><br><span>'+data.cart[i].film.price+'</span></div>';
                 totalAmount += Number(data.cart[i].film.price);
                 $("#cart-modal").append(cartSection);
             }
@@ -454,15 +463,15 @@ function getCustomerProfile(){
     })
 }
 
-function editCreditCardt(){
+function editCreditCard(){
     const creditCard = {
         customer_id: localStorage.getItem('user_id'),
-        bank_name: $("#add_bank_name").val(),
-        card_number: $("#add_card_number").val(),
-        card_type: $("#add_card_type").val(),
-        cvv: $("#add_cvv").val(),
-        expiry_date: $("#add_expiry_date").val()
-    }
+        bank_name: $("#edit_add_bank_name").val(),
+        card_number: $("#edit_add_card_number").val(),
+        card_type: $("#edit_add_card_type").val(),
+        cvv: $("#edit_add_cvv").val(),
+        expiry_date: $("#edit_add_expiry_date").val()
+    };
     $.ajax({
         type:'post',
         url: appUrl+'/user/update/card/'+localStorage.getItem('user_id'),

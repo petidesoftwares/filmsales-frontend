@@ -8,8 +8,9 @@
 <div id="user-page-title">
     <h1>Film Sales Services</h1>
     <div class="loggedin-nav">
+        <span class="access-control-btn">Home</span>
         <div id="shopping-cart" onclick="showModal()">Cart:<span id="cart-sum"></span></div>
-        <div id="profile-photo" onclick="toggleDropdown()" class="dp-view"></div>
+        <div id="profile-photo" onclick="toggleDropdown()" class="dp-view">User</div>
         <div id="dropdown-menu" class="dp-content profile-dropdown">
             <span onclick="directToProfile()">View Profile</span>
             <span onclick="directToViewCredit()">View Credit Card</span>
@@ -43,7 +44,7 @@
             <div class="form-component">
                 <input type="number" name="phone" class="form-element" id="edit_phone_number" placeholder="Phone Number">
             </div>
-            <button type="button" id="make-payment" class="btn" onclick="editProfile()">Pay</button>
+            <button type="button" id="make-payment" class="btn" onclick="editProfile()">Edit</button>
         </div>
     </div>
 </div>

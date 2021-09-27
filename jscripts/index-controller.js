@@ -6,11 +6,8 @@ $(document).ready(function (){
     FetchProduct();
 })
 
-function controlNewUser(){
-    $("#logout-btn").hide();
-    $("#profile-photo").hide();
-    $("#dropdown-menu").hide()
-}
+// function controlNewUser(){
+// }
 
 function FetchProduct(){
     $.get(appUrl+'/admin/films',function (data){
