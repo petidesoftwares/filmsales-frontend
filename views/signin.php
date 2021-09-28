@@ -11,10 +11,12 @@
             <div class="form">
                 <div class="form-title"><h3>Sign</h3></div>
                 <div class="form-component">
-                    <input type="email" name="email" class="form-element" id="email" placeholder="Enter Email">
+                    <input type="email" name="email" class="form-element" id="email" placeholder="Enter Email"><br>
+                    <span class="signup-errors-pane" id="signin-email-error"></span>
                 </div>
                 <div class="form-component">
-                    <input type="password" name="password" class="form-element" id="password" placeholder="Enter Password">
+                    <input type="password" name="password" class="form-element" id="password" placeholder="Enter Password"><br>
+                    <span class="signup-errors-pane" id="signin-password-error"></span>
                 </div>
                 <button type="button" id="reg_user_btn" class="btn" onclick="signIn()">Login</button>
             </div>

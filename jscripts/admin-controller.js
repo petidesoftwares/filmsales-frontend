@@ -1,34 +1,4 @@
 const appUrl ="http://127.0.0.1:8000/api";
-const createForm = '<form name="film-form" id="film-form" enctype="multipart/form-data" class="form">\n' +
-    '                <div class="form-title"><h3>Create Film</h3></div>\n' +
-    '                <div class="form-component">\n' +
-    '                    <input type="file" name="video"  class="form-element" id="video" accept="video/*" placeholder="Select Film"/><br>\n' +
-    '                </div>\n' +
-    '                <div class="form-component">\n' +
-    '                    <input type="text" class="form-element" name="price" id="price" placeholder="Enter Price"/><br>\n' +
-    '                </div>\n' +
-    '                <div class="form-component">\n' +
-    '                    <input type="number" class="form-element" name="available_cps" id="available_cps" placeholder="Available Copies"/><br>\n' +
-    '                </div>\n' +
-    '                <div class="form-component">\n' +
-    '                    <input type="text" class="form-element" name="product" id="product" placeholder="Enter Film Prodect"/><br>\n' +
-    '                </div>\n' +
-    '                <div class="form-component-with-checkbox">\n' +
-    '                    <span><input type="checkbox" name="genre1" id="genre1" value="Action"/>Action</span>\n' +
-    '\n' +
-    '                    <span><input type="checkbox" name="genre2" id="genre2" value="Romance"/>Romance</span>\n' +
-    '\n' +
-    '                    <span><input type="checkbox" name="genre3" id="genre3" value="Epic"/>Epic</span>\n' +
-    '\n' +
-    '                    <span><input type="checkbox" name="genre4" id="genre4" value="Adventure"/>Adventure </span>\n' +
-    '\n' +
-    '                    <span><input type="checkbox" name="genre5" id="genre5" value="Education"/>Education </span>\n' +
-    '\n' +
-    '                    <span><input type="checkbox" name="genre5" id="genre5" value="Dull"/>Dull </span>\n' +
-    '                </div>\n' +
-    '\n' +
-    '                <input type="submit" id="save-film-btn" onclick="sendVideo()" value="Upload"/>\n' +
-    '            </form>';
 
 const filmViewForm = `<div class="search-pane" id="view-film-pane"><input type="text"  name="search-genre" id="search-genre" placeholder="Search film by genre"/><button class="search-btn" onclick="searchByGenre()">Search</button></div>`;
 const searchProductForm = `<div class="search-pane" id="view-product-pane"><input type="text" name="search-product" id="search-product" placeholder="Enter phrase or character from product to search"/><button class="search-btn" onclick="searchFilmByProductChar()">Search</button></div>`;
@@ -57,6 +27,36 @@ $(document).ready(function (){
 /*****************Admin Activities***********************/
 
 function showCreateForm(e){
+    const createForm = '<form name="film-form" id="film-form" enctype="multipart/form-data" class="form">\n' +
+        '                <div class="form-title"><h3>Create Film</h3></div>\n' +
+        '                <div class="form-component">\n' +
+        '                    <input type="file" name="video"  class="form-element" id="video" accept="video/*" placeholder="Select Film"/><br>\n' +
+        '                </div>\n' +
+        '                <div class="form-component">\n' +
+        '                    <input type="text" class="form-element" name="price" id="price" placeholder="Enter Price"/><br>\n' +
+        '                </div>\n' +
+        '                <div class="form-component">\n' +
+        '                    <input type="number" class="form-element" name="available_cps" id="available_cps" placeholder="Available Copies"/><br>\n' +
+        '                </div>\n' +
+        '                <div class="form-component">\n' +
+        '                    <input type="text" class="form-element" name="product" id="product" placeholder="Enter Film Prodect"/><br>\n' +
+        '                </div>\n' +
+        '                <div class="form-component-with-checkbox">\n' +
+        '                    <span><input type="checkbox" name="genre1" id="genre1" value="Action"/>Action</span>\n' +
+        '\n' +
+        '                    <span><input type="checkbox" name="genre2" id="genre2" value="Romance"/>Romance</span>\n' +
+        '\n' +
+        '                    <span><input type="checkbox" name="genre3" id="genre3" value="Epic"/>Epic</span>\n' +
+        '\n' +
+        '                    <span><input type="checkbox" name="genre4" id="genre4" value="Adventure"/>Adventure </span>\n' +
+        '\n' +
+        '                    <span><input type="checkbox" name="genre5" id="genre5" value="Education"/>Education </span>\n' +
+        '\n' +
+        '                    <span><input type="checkbox" name="genre5" id="genre5" value="Dull"/>Dull </span>\n' +
+        '                </div>\n' +
+        '\n' +
+        '                <button type="button" id="save-film-btn" onclick="sendVideo()">Upload</button>\n' +
+        '            </form>';
     document.getElementById(e.id).setAttribute('class','active');
     $("#admin-w-logo").remove();
     var content = $(".admin-form-pane").html();
@@ -64,7 +64,7 @@ function showCreateForm(e){
         $("#film-form").remove();
     }
     $("#edit-form").remove();
-    $(".admin-form-pane").append(createForm);
+    $(".admin-form-pane").html(createForm);
 
 }
 function showEditForm(e){
@@ -176,7 +176,6 @@ function submitEditedFilms(){
 }
 
 function getFilmView(e){
-    document.getElementById(e.id).setAttribute('class','active');
     $("#admin-w-logo").remove();
     var content = $(".admin-form-pane").html();
     if(content !== ""){
@@ -241,12 +240,14 @@ function searchByGenre() {
         $.get(appUrl+'/admin/view/film/'+genre, function (data){
             $(".output").html("");
             var film = '<div>';
+            var sn = 0;
             for (let i=0; i<data.film.length; i++){
-                film +='<span>1. '+data.film[i].film.title+'</span><br>';
-                film +='<span>2. '+data.film[i].film.price+'</span><br>';
-                film +='<span>3. '+data.film[i].film.available_cps+'</span><br>';
-                film +='<span>4. '+data.film[i].film.product+'</span><br>';
-                film +='<span>5. '+data.film[i].genre+'</span><br><br>';
+                sn++;
+                film +='<span>'+sn+'. '+data.film[i].film.title+'</span><br>';
+                film +='<span>'+'   Price:. '+data.film[i].film.price+'</span><br>';
+                film +='<span>'+'   Copies. '+data.film[i].film.available_cps+'</span><br>';
+                film +='<span>'+'   Product. '+data.film[i].film.product+'</span><br>';
+                film +='<span>'+'   genre. '+data.film[i].genre+'</span><br><br>';
             }
             film +="</div>";
             $(".output").html(film);
@@ -288,7 +289,7 @@ function searchCustomerByAge(){
                         // $(".output").append(data.customer[i]['firstname']);
                         // console.log(data.customer[i]['firstname']);
                         sn++;
-                        customers +='<span>'+sn+' '+data.customer[i]['firstname']+' '+data.customer[i].middle_name+' '+data.customer[i].surname+'</span>';
+                        customers +='<span>'+sn+' '+data.customer[i].firstname+' '+data.customer[i].middle_name+' '+data.customer[i].surname+'</span>';
                     }
                     customers += '</div>';
                     $(".output").html(customers);
@@ -318,20 +319,26 @@ function monthlySales(){
         });
     }
 }
+function clearForm(){
+        $("#film-form")[0].reset();
+}
 
 function sendVideo(){
-    $("#film-form").submit(function (e){
-        e.preventDefault();
+    if ($(".output").html() !== "" || $(".output").html() !==null){
+        $(".output").html("");
+    }
         const inputFile = $("input[type='file']").val();
         if(inputFile === ""){
             console.log("empty");
         }else {
+            let myForm = document.getElementById('film-form');
+            let data =  new FormData(myForm);
 
             $.ajax({
                 type: 'post',
                 enctype: 'multipart/form-data',
                 url: appUrl + '/admin/create-film',
-                data : new FormData(this),
+                data : data,
                 contentType: false,
                 cache: false,
                 processData: false,
@@ -341,6 +348,7 @@ function sendVideo(){
                 success: function(response){
                     if(response.status == 200){
                         $(".output").html(response.message);
+                        clearForm();
                     }
                     this.refresh(true);
                 },
@@ -354,7 +362,6 @@ function sendVideo(){
                 },
             });
         }
-    })
 }
 
 /******************Home Page******************/

@@ -50,6 +50,10 @@ body{
     margin-top: 1%;
 }
 
+.signup-errors-pane{
+    color: red;
+}
+
 #film-to-delete{
     width: 60%;
     font-size: large;
@@ -318,6 +322,7 @@ body{
 
 
 .profile-dropdown{
+    margin-top: -5%;
     margin-left: 70%;
 }
 #user-page-title h1{

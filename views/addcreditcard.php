@@ -42,7 +42,7 @@
                 <label>Expiry Date:</label> <input type="date" name="expiry-date" class="form-element" id="add_expiry_date" required>
             </div>
 
-            <button type="button" id="create-credit-card" class="btn" onclick="creatCreditCardt()">Pay</button>
+            <button type="button" id="create-credit-card" class="btn" onclick="creatCreditCardt()">Add</button>
         </div>
     </div>
 </div>

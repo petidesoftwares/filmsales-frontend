@@ -24,7 +24,7 @@
 <div class="editprofile-main-display-page">
     <div class="form-pane">
         <div class="form">
-            <div class="form-title"><h3>Make Payment</h3></div>
+            <div class="form-title"><h3>Edit Profile</h3></div>
             <div class="form-component">
                 <input type="text" name="firstname" class="form-element" id="edit_user_firstname" placeholder="Firstname">
             </div>
@@ -35,8 +35,8 @@
                 <input type="text" name="surname" class="form-element" id="edit_user_surname" placeholder="Surname">
             </div>
             <div class="form-component">
-                <label>Gender: </label><span><input type="radio" name="edit_gender"  value="Male">Male</span>
-                <span id="span2"><input type="radio" name="edit_gender"  value="Female">Female</span>
+                <label>Gender: </label><span><input type="radio" name="edit_gender" id="gender_male" value="Male">Male</span>
+                <span id="span2"><input type="radio" name="edit_gender" id="gender_female" value="Female">Female</span>
             </div>
             <div class="form-component">
                 <input type="date" name="date" class="form-element" id="edit_date_of_birth" placeholder="Date of birth">

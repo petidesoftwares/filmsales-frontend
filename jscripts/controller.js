@@ -1,30 +1,53 @@
+/**
+ * The file solely controls the activities of a
+ * registered user.
+ * Only logged in users have access to the
+ * protected route of the API via this controller.
+ */
 
+
+/**
+ * The url to the backend API
+ * @type {string}
+ */
 const appUrl ="http://127.0.0.1:8000/api";
 
-    if(localStorage.getItem('token') === "" || localStorage.getItem('token')=== null){
-        window.location.href ='index.php';
-    }
+/**
+ * Verify if the accessor is logged in or not
+ */
+if(localStorage.getItem('token') === "" || localStorage.getItem('token')=== null){
+     window.location.href ='index.php';
+}
+
+/**
+ * Load the javascript documents when the
+ * page consuming it is ready
+ */
 $(document).ready(function(){
+    /**
+     * Check the url of the page that is loading
+     * and grant access to the required functions
+     */
     if($(location).attr('href').endsWith('payment.php')){
         getCreditCard();
-        showCart();
-    }else if($(location).attr('href').endsWith('profile.php')) {
+        updateCart();
+    }
+    if($(location).attr('href').endsWith('profile.php')) {
         getCustomerProfile();
-        showCart();
-    }else if ($(location).attr('href').endsWith('creditcarddetails.php')){
+        updateCart();
+    }if ($(location).attr('href').endsWith('creditcarddetails.php')){
         showCreditardDetial();
-        showCart();
-    }
-    else if ($(location).attr('href').endsWith('edit-profile.php.php')){
+        updateCart();
+    }if ($(location).attr('href').endsWith('edit-profile.php')){
         getProfileEditableDetails();
-        showCart();
-    }
-    else if ($(location).attr('href').endsWith('creditcarddetails.php')){
-        showCreditardDetial();
-        showCart();
+        updateCart();
+    }if ($(location).attr('href').endsWith('editcreditcard.php')){
+        getCreditCardEditableDetails();
+        updateCart();
     }
     else {
-        showCart();
+        //These functions are consumed by the home page only
+        updateCart();
         FetchProduct();
         closeModal();
     }
@@ -69,13 +92,13 @@ function FetchProduct(){
         for(let i=0; i<data.length; i++){
             var card = '<div class="film-display-card">';
             card += '<video controls> <source src="'+data[i].location+'/'+data[i].title+'" type="video/*"></video>';
-            card += '<div><input type="hidden" id="film_id_'+data[i].id+'" value="'+data[i].id+'" /><span class="title">Title:</span><span class="title"> '+data[i].title+'</span><br><span>Price: </span><span <span class="price">'+data[i].price+'</span><br><button onclick="addToCart('+data[i].id+')">Add to Cart</button></div>';
+            card += '<div><input type="hidden" id="film_id_'+data[i].id+'" value="'+data[i].id+'" /><span class="title">Title:</span><span class="title"> '+data[i].title+'</span><br><span>Price: </span><span <span class="price">'+data[i].price+'</span><br><button style="cursor: pointer" onclick="addToCart('+data[i].id+')">Add to Cart</button></div>';
             $(".main-display-page").append(card);
         }
     })
 }
 
-function showCart(){
+function updateCart(){
     $.ajax({
         type: 'get',
         url: appUrl + '/user/all-cart/'+localStorage.getItem('user_id'),
@@ -88,7 +111,7 @@ function showCart(){
         data: {},
 
         success: function (response){
-            $("#cart-sum").append(response.cartSum[0].total);
+            $("#cart-sum").html(response.cartSum[0].total);
             if(response.cartSum[0].total == 0){
                 if (localStorage.getItem('number_items') != null){
                     localStorage.removeItem('number_items');
@@ -130,8 +153,9 @@ function addToCart(id){
             success: function (data){
                 if(data.status === 200){
                     alert(data.message);
-                    showCart();
-                    localStorage.setItem('shoppingID',shoppingID);
+                    updateCart();
+                    localStorage.setItem('shoppingID',cartItem.shopping_id);
+                    // window.location.href='home.php';
                 }
             },
             error:function (error){
@@ -234,7 +258,6 @@ function getCreditCard(){
                     data: {},
 
                     success: function (data){
-
                         if(data.status === 200){
                             $("#acc-holder").val(localStorage.getItem('name'));
                             $("#bank_name").val(data.cardDetails[0].bank_name);
@@ -254,7 +277,7 @@ function getCreditCard(){
                 window.location.href='addcreditcard.php';
             }
         },
-        error:function (error){
+        error:function (xhr, status, error){
             alert(error);
             console.log(error);
         },
@@ -301,7 +324,7 @@ function creatCreditCardt(){
  */
 function clearCart(){
     const clearKey ={
-        shoppind_id: localStorage.getItem('shoppingID'),
+        shopping_id: localStorage.getItem('shoppingID'),
         customer_id: localStorage.getItem('user_id')
     };
 
@@ -318,9 +341,9 @@ function clearCart(){
 
         success: function (data){
             if(data.status === 200){
-                if(data.deleted === 1){
-                    alert('Your cart has been cleard');
-                    showCart();
+                if(data.deleted === 1 || data.deleted === true){
+                    alert('Your cart has been cleared');
+                    updateCart();
                     window.location.href ='home.php';
                 }
 
@@ -341,7 +364,7 @@ function makePayment(){
         card_number: $("#card_number").val(),
         amount: $("#amount").val(),
         shopping_id: localStorage.getItem('shoppingID')
-    }
+    };
     $.ajax({
         type:'post',
         url: appUrl+'/user/payment',
@@ -355,12 +378,21 @@ function makePayment(){
 
         success: function (data){
             if(data.status === 200){
-                alert(data.message);
-                clearCart();
-                localStorage.removeItem('shoppingID');
-                localStorage.removeItem('number_items');
-                localStorage.removeItem('orderAmount');
-                window.location.href ='home.php';
+                var pos = data.message.search("unsuccessful");
+
+                if(pos === -1){
+                    alert(data.message);
+                    clearCart();
+                    // localStorage.removeItem('shoppingID');
+                    // localStorage.removeItem('number_items');
+                    // localStorage.removeItem('orderAmount');
+                    // window.location.href ='home.php';
+                }
+                else{
+                    alert(data.message);
+                    console.log(data.card);
+                }
+
             }
 
         },
@@ -463,6 +495,35 @@ function getCustomerProfile(){
     })
 }
 
+function getCreditCardEditableDetails(){
+    alert(localStorage.getItem('user_id'));
+    $.ajax({
+        type:'get',
+        url: appUrl+'/user/show/card/'+localStorage.getItem('user_id'),
+        datatype:'json',
+        beforeSend:function (xhr){
+            xhr.setRequestHeader('Content-Type','application/json');
+            xhr.setRequestHeader('Accept','application/json');
+            xhr.setRequestHeader('Authorization','Bearer '+localStorage.getItem('token'));
+        },
+        data: {},
+
+        success: function (data){
+            if(data.status === 200){
+
+                $("#edit_add_bank_name").val(data.cardDetails[0].bank_name);
+                $("#edit_add_card_number").val(data.cardDetails[0].card_number);
+                $("#edit_add_card_type").val(data.cardDetails[0].card_type);
+                $("#edit_add_cvv").val(data.cardDetails[0].cvv);
+                $("#edit_add_expiry_date").val(data.cardDetails[0].expiry_date);
+            }
+        },
+        error:function (error){
+            console.log(error);
+        },
+    })
+}
+
 function editCreditCard(){
     const creditCard = {
         customer_id: localStorage.getItem('user_id'),
@@ -539,11 +600,18 @@ function getProfileEditableDetails(){
 
         success: function (data){
             if(data.status === 200){
+                console.log(data.data[0].firstname);
                 $("#edit_user_firstname").val(data.data[0].firstname);
                 $("#edit_user_surname").val(data.data[0].surname);
                 $("#edit_user_middle_name").val(data.data[0].middle_name);
+                $("input[name='edit_gender']")
                 $("#edit_date_of_birth").val(data.data[0].dob);
                 $("#edit_phone_number").val(data.data[0].phone);
+                if($("#gender_female").val() ===data.data[0].gender){
+                    $("#gender_female").attr('checked',true);
+                }else{
+                    $("#gender_male").attr('checked',true);
+                }
             }
 
         },
