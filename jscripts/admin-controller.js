@@ -278,23 +278,34 @@ function searchCustomerByAge(){
     if(age === ""){
         alert('Search field required');
     }else{
-        $.get(appUrl+'/admin/customer/'+age, function (data){
-            if(data.status == 200){
-                if(data.customer.length == 0){
-                    $(".output").html('Customer with age above '+age+' not found');
-                }else{
-                    var customers ='<div>';
-                    var sn=0;
-                    for (let i=0; data.customer.length;i++){
-                        // $(".output").append(data.customer[i]['firstname']);
-                        // console.log(data.customer[i]['firstname']);
-                        sn++;
-                        customers +='<span>'+sn+' '+data.customer[i].firstname+' '+data.customer[i].middle_name+' '+data.customer[i].surname+'</span>';
+        $.ajax({
+            type: 'get',
+            url: appUrl+'/admin/customer/'+age,
+            beforeSend:function (xhr){
+                xhr.setRequestHeader('Content-Type','application/json');
+                xhr.setRequestHeader('Accept','application/json');
+            },
+            data:{},
+            success: function (data){
+                if(data.status == 200) {
+                    if (data.customer.length == 0) {
+                        $(".output").html('Customer with age above ' + age + ' not found');
+                    } else {
+                        var customers = '<div>';
+                        var sn = 0;
+                        for (let i = 0; data.customer.length; i++) {
+                            sn++;
+                            customers += '<span>' + sn + ' ' + data.customer[i].firstname + ' ' + data.customer[i].middle_name + ' ' + data.customer[i].surname + '</span>';
+                        }
+                        customers += '</div>';
+                        $(".output").html(customers);
                     }
-                    customers += '</div>';
-                    $(".output").html(customers);
-                }
 
+
+                }
+            },
+            error: function (xhr, status, error){
+                console.log(JSON.parse(xhr.responseText));
             }
         });
     }
