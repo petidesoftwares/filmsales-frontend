@@ -291,14 +291,13 @@ function searchCustomerByAge(){
                     if (data.customer.length == 0) {
                         $(".output").html('Customer with age above ' + age + ' not found');
                     } else {
-                        var customers = '<div>';
                         var sn = 0;
-                        for (let i = 0; data.customer.length; i++) {
+                        for(let i = 0; i<data.customer.length;i++){
                             sn++;
-                            customers += '<span>' + sn + ' ' + data.customer[i].firstname + ' ' + data.customer[i].middle_name + ' ' + data.customer[i].surname + '</span>';
+                            $(".output").append('<span>'+sn+'. </span><span>'+data.customer[i].firstname+' '+data.customer[i].middle_name+' '+data.customer[i].surname+'</span>');
                         }
-                        customers += '</div>';
-                        $(".output").html(customers);
+
+
                     }
 
 
